@@ -57,7 +57,7 @@ following input JSON file named `fold_input.json`:
 }
 ```
 
-You can then run AlphaFold 3 using the following command:
+You can then run AlphaFold 3 using the following command(To run both pipeline and inference):
 
 ```
 docker run -it \
@@ -72,7 +72,34 @@ docker run -it \
     --model_dir=/root/models \
     --output_dir=/root/af_output
 ```
-
+To run both only the inference:
+```
+docker run -it \
+    --volume $HOME/af_input:/root/af_input \
+    --volume $HOME/af_output:/root/af_output \
+    --volume <MODEL_PARAMETERS_DIR>:/root/models \
+    --volume <DATABASES_DIR>:/root/public_databases \
+    --gpus all \
+    alphafold3 \
+    python run_alphafold.py \
+    --json_path=/root/af_input/fold_input.json \
+    --model_dir=/root/models \
+    --output_dir=/root/af_output  --norun_data_pipeline
+```
+To run both only the datapipeline:
+```
+docker run -it \
+    --volume $HOME/af_input:/root/af_input \
+    --volume $HOME/af_output:/root/af_output \
+    --volume <MODEL_PARAMETERS_DIR>:/root/models \
+    --volume <DATABASES_DIR>:/root/public_databases \
+    --gpus all \
+    alphafold3 \
+    python run_alphafold.py \
+    --json_path=/root/af_input/fold_input.json \
+    --model_dir=/root/models \
+    --output_dir=/root/af_output  --norun_inference
+```
 There are various flags that you can pass to the `run_alphafold.py` command, to
 list them all run `python run_alphafold.py --help`. Two fundamental flags that
 control which parts AlphaFold 3 will run are:
